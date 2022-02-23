@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:49:00 by amarchal          #+#    #+#             */
-/*   Updated: 2022/02/22 15:55:28 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/02/23 17:29:03 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,23 @@ int	ft_init_table(t_param *param)
 	while (i < param->nb_of_philo)
 	{
 		philo.index = i;
-		philo.fork = 1;
 		philo.param = param;
 		param->philos[i] = philo;
-		if (pthread_mutex_init(&param->philos[i].mutex, NULL) != 0)
+		if (pthread_mutex_init(&param->philos[i].fork, NULL) != 0)
 			return (0);
+		i++;
+	}
+	i = 0;
+	while (i < param->nb_of_philo)
+	{
+		usleep(1100);
 		if (pthread_create(&param->philos[i].thread, NULL, ft_philo, &param->philos[i]) != 0)
 			return (0);
 		if (pthread_join(param->philos[i].thread, NULL) != 0)
 			return (0);
 		i++;
 	}
+	
 	return (1);
 }
 
@@ -61,6 +67,5 @@ int	main(int ac, char **av)
 	ft_get_param(&param, av);
 	if (!ft_init_table(&param))
 		return (0);
-	printf("nb of phil = %d\n", param.nb_of_philo);
 	return (0);
 }
