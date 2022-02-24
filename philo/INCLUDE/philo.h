@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:50:29 by amarchal          #+#    #+#             */
-/*   Updated: 2022/02/23 16:13:55 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/02/24 17:19:28 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,16 @@
 
 typedef struct s_philo
 {
-	int						index;
-	pthread_t				thread;
-	pthread_mutex_t			fork;
-	struct s_param			*param;
-	long					start_time;
+	int				index;
+	pthread_t		thread;
+	pthread_mutex_t	fork;
+	int				fork_lock;
+	struct s_param	*param;
+	long			start_time;
+	long			last_meal;
+	int				nb_meal;
+	int				dead;
+	int				color;
 }	t_philo;
 
 typedef struct s_param

@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 10:18:13 by amarchal          #+#    #+#             */
-/*   Updated: 2022/02/22 11:06:02 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/02/24 17:37:00 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int	ft_check_args(char **av)
 			write (2, "Error : Wrong argument format\n", 30);
 			return (0);
 		}
+		if (i == 4 && ft_atoi(av[i]) == 0)
+			return (0);
 		i++;
 	}
 	return (1);

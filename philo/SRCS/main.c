@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:49:00 by amarchal          #+#    #+#             */
-/*   Updated: 2022/02/23 17:29:03 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/02/24 18:11:15 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	ft_get_param(t_param *param, char **av)
 	param->time_to_sleep = ft_atoi(av[4]);
 	if (av[5])
 		param->nb_of_eat = ft_atoi(av[5]);
+	else
+		param->nb_of_eat = 0;
 }
 
 int	ft_init_table(t_param *param)
@@ -33,8 +35,14 @@ int	ft_init_table(t_param *param)
 		return (0);
 	while (i < param->nb_of_philo)
 	{
-		philo.index = i;
+		philo.index = i + 1;
+		philo.fork_lock = 0;
 		philo.param = param;
+		// philo.start_time = 0;
+		philo.last_meal = 0;
+		philo.nb_meal = 0;
+		philo.dead = 0;
+		philo.color = (i + 1) % 8 + 90;
 		param->philos[i] = philo;
 		if (pthread_mutex_init(&param->philos[i].fork, NULL) != 0)
 			return (0);
@@ -43,14 +51,17 @@ int	ft_init_table(t_param *param)
 	i = 0;
 	while (i < param->nb_of_philo)
 	{
-		usleep(1100);
 		if (pthread_create(&param->philos[i].thread, NULL, ft_philo, &param->philos[i]) != 0)
 			return (0);
+		i++;
+	}
+	i = 0;
+	while (i < param->nb_of_philo)
+	{
 		if (pthread_join(param->philos[i].thread, NULL) != 0)
 			return (0);
 		i++;
 	}
-	
 	return (1);
 }
 
