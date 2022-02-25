@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:50:29 by amarchal          #+#    #+#             */
-/*   Updated: 2022/02/24 17:19:28 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/02/25 14:36:15 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ typedef struct s_philo
 typedef struct s_param
 {
 	int			nb_of_philo;
-	int			time_to_die;
-	int			time_to_eat;
-	int			time_to_sleep;
+	long		time_to_die;
+	long		time_to_eat;
+	long		time_to_sleep;
 	int			nb_of_eat;
 	t_philo		*philos;
 }	t_param;
