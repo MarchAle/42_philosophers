@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:49:00 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/02 16:46:23 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/02 14:02:40 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 void	ft_get_param(t_param *param, char **av)
 {
 	param->nb_phi = ft_atoi(av[1]);
+	param->semaphore = sem_open("semaphore", O_CREAT, 0644, param->nb_phi);
+	// sem_open(&param->semaphore, 0, param->nb_phi);
+	// sem_open()
+	param->forks = param->nb_phi;
 	if (param->nb_phi < 60)
 		param->tempo = 100;
 	else if (param->nb_phi < 120)
@@ -42,15 +46,15 @@ int	ft_init_table(t_param *param)
 	while (i < param->nb_phi)
 	{
 		philo.index = i + 1;
-		philo.fork_lock = 0;
+		// philo.fork_lock = 0;
 		philo.p = param;
 		philo.last_meal = 0;
 		philo.nb_meal = 0;
 		philo.dead = 0;
 		philo.color = (i + 1) % 8 + 90;
 		param->philos[i] = philo;
-		if (pthread_mutex_init(&param->philos[i].fork, NULL) != 0)
-			return (0);
+		// if (pthread_mutex_init(&param->philos[i].fork, NULL) != 0)
+		// 	return (0);
 		i++;
 	}
 	return (1);
@@ -76,7 +80,8 @@ int	ft_launch_thread(t_param *param)
 			return (0);
 		i++;
 	}
-	ft_mutex_destroy(param);
+	sem_unlink(param->semaphore);
+	// ft_mutex_destroy(param);
 	free(param->philos);
 	return (1);
 }
