@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 16:14:16 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/03 16:16:52 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/04 11:43:59 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,9 @@ int	ft_eat(t_philo *philo)
 {
 	printf("\033[%dm%ld %d is eating\033[0m\n", philo->color,
 		ft_get_time() - philo->start_time, philo->index);
+	pthread_mutex_lock(&philo->mil);
 	philo->nb_meal++;
+	pthread_mutex_unlock(&philo->mil);
 	if (philo->p->nb_of_eat)
 		if (ft_check_meal(philo))
 			return (0);

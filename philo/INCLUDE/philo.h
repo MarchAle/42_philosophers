@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:50:29 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/01 17:50:12 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/04 11:43:00 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ typedef struct s_philo
 	pthread_mutex_t	fork;
 	int				fork_lock;
 	long			last_meal;
+	pthread_mutex_t	mil;
 	int				nb_meal;
 	struct s_param	*p;
+	pthread_mutex_t	ded;
 	int				dead;
 	int				color;
 }	t_philo;

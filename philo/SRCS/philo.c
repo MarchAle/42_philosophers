@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:28:35 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/01 17:42:18 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/04 11:21:10 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,13 @@ int	ft_am_i_dead(t_philo *philo)
 	i = 0;
 	while (i < philo->p->nb_phi)
 	{
+		pthread_mutex_lock(&philo->p->philos[i].ded);
 		if (philo->p->philos[i].dead == 1)
+		{
+			pthread_mutex_unlock(&philo->p->philos[i].ded);
 			return (1);
+		}
+		pthread_mutex_unlock(&philo->p->philos[i].ded);
 		i++;
 	}
 	if (ft_get_time() >= philo->last_meal + philo->p->t_die)
@@ -59,6 +64,8 @@ void	*ft_philo(void *data)
 		if (!ft_sleep(philo))
 			break ;
 	}
+	pthread_mutex_lock(&philo->ded);
 	philo->dead = 1;
+	pthread_mutex_unlock(&philo->ded);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:49:00 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/02 16:46:23 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/04 11:49:40 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ int	ft_init_table(t_param *param)
 		philo.dead = 0;
 		philo.color = (i + 1) % 8 + 90;
 		param->philos[i] = philo;
-		if (pthread_mutex_init(&param->philos[i].fork, NULL) != 0)
+		if (pthread_mutex_init(&param->philos[i].fork, NULL)
+			|| pthread_mutex_init(&param->philos[i].ded, NULL)
+			|| pthread_mutex_init(&param->philos[i].mil, NULL))
 			return (0);
 		i++;
 	}
