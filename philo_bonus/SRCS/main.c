@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:49:00 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/02 14:02:40 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/04 17:37:55 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 void	ft_get_param(t_param *param, char **av)
 {
 	param->nb_phi = ft_atoi(av[1]);
-	param->semaphore = sem_open("semaphore", O_CREAT, 0644, param->nb_phi);
-	// sem_open(&param->semaphore, 0, param->nb_phi);
+	param->semafork = sem_open("/semafork", O_CREAT | O_EXCL, 0644, param->nb_phi);
+	sem_close(param->semafork);
+	// sem_open(&param->semafork, 0, param->nb_phi);
 	// sem_open()
 	param->forks = param->nb_phi;
 	if (param->nb_phi < 60)
@@ -60,36 +61,53 @@ int	ft_init_table(t_param *param)
 	return (1);
 }
 
-int	ft_launch_thread(t_param *param)
-{
-	int	i;
+// int	ft_launch_thread(t_param *param)
+// {
+// 	int	i;
 
-	i = 0;
-	while (i < param->nb_phi)
-	{
-		usleep(10);
-		if (pthread_create(&param->philos[i].thread, NULL,
-				ft_philo, &param->philos[i]) != 0)
-			return (0);
-		i++;
-	}
-	i = 0;
-	while (i < param->nb_phi)
-	{
-		if (pthread_join(param->philos[i].thread, NULL) != 0)
-			return (0);
-		i++;
-	}
-	sem_unlink(param->semaphore);
-	// ft_mutex_destroy(param);
-	free(param->philos);
-	return (1);
+// 	i = 0;
+// 	while (i < param->nb_phi)
+// 	{
+// 		usleep(10);
+// 		if (pthread_create(&param->philos[i].thread, NULL,
+// 				ft_philo, &param->philos[i]) != 0)
+// 			return (0);
+// 		i++;
+// 	}
+// 	i = 0;
+// 	while (i < param->nb_phi)
+// 	{
+// 		if (pthread_join(param->philos[i].thread, NULL) != 0)
+// 			return (0);
+// 		i++;
+// 	}
+// 	sem_unlink(param->semaphore);
+// 	// ft_mutex_destroy(param);
+// 	free(param->philos);
+// 	return (1);
+// }
+
+void	ft_test(int pid, int i, t_param *param)
+{
+	printf("Hello je suis philo %d avec le pid %d\n", i, pid);
+	param->pids[i - 1] = pid;
+	// int j = 0;
+	// usleep(100000 * i);
+	// while (j < param->nb_phi)
+	// {
+	// 	printf("pids[%d] = %d\n", j, param->pids[j]);
+	// 	j++;
+	// }
 }
 
 int	main(int ac, char **av)
 {
 	t_param	param;
+	int		i;
+	int		pid;
 
+	i = 0;
+	pid = 0;
 	if (ac < 5 || ac > 6)
 	{
 		write (2, "Error : Wrong number of arguments\n", 34);
@@ -105,7 +123,31 @@ int	main(int ac, char **av)
 	ft_get_param(&param, av);
 	if (!ft_init_table(&param))
 		return (0);
-	if (!ft_launch_thread(&param))
-		return (0);
+	param.semafork = sem_open(SEM_NAME, O_RDWR, 0644, param.nb_phi);	
+	param.pids = malloc(sizeof(int) * param.nb_phi);
+	while (i < param.nb_phi && pid == 0)
+	{
+		usleep(100);
+		param.pids[i] = fork();
+		pid = param.pids[i];
+		i++;
+	}
+	// printf("ici pid = %d et nbr = %d\n", pid, i);
+	// pids[nbr] = pid;
+	if (pid != 0)
+	{
+		ft_philo(pid, i, &param);
+		// ft_test(pid, i, &param);
+	}
+
+	// if (pid == 0)
+	// {
+	// 	int j = 0;
+	// 	while (j < param.nb_phi)
+	// 	{
+	// 		printf("pids[%d] = %d\n", j, param.pids[j]);
+	// 		j++;
+	// 	}
+	// }
 	return (0);
 }

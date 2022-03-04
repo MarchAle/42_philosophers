@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:28:35 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/02 14:02:27 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/04 17:30:52 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,18 @@ int	ft_am_i_dead(t_philo *philo)
 // 	}
 // }
 
-void	*ft_philo(void *data)
+int	ft_philo(int pid, int i, t_param *param)
 {
+	(void)pid;
 	t_philo	*philo;
 
-	philo = (t_philo *)data;
+	philo = &param->philos[i];
+	philo->index = i;
 	philo->start_time = ft_get_time();
 	philo->last_meal = ft_get_time();
+	param->semafork = sem_open(SEM_NAME, O_RDWR, 0644, param->nb_phi);
+	// philo->nb_meal = 0;
+	// printf("Hello je suis philo %d avec le pid %d\n", i, pid);
 	while (1)
 	{
 		if (!ft_think(philo))
@@ -60,6 +65,6 @@ void	*ft_philo(void *data)
 			break ;
 	}
 	philo->dead = 1;
-	sem_close(philo->p->semaphore);
+	sem_close(philo->p->semafork);
 	return (0);
 }

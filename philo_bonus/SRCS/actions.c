@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 16:14:16 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/02 13:55:56 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/04 17:36:48 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,18 @@
 
 int	ft_take_fork(t_philo *philo)
 {
-	while (1)
-	{
-		if (philo->p->forks > 0)
-			break ;
-		if (ft_am_i_dead(philo))
-			return (0);
-		usleep(philo->p->tempo);
-	}
-	sem_wait(philo->p->semaphore);
-	philo->p->forks -= 1;
+	// printf("nb forks = %d\n", philo->p->forks);
+	// printf("\033[%dmnb forks = %d\033[0m\n", philo->color, philo->p->forks);
+	// while (1)
+	// {
+	// 	if (philo->p->forks > 0)
+	// 		break ;
+	// 	if (ft_am_i_dead(philo))
+	// 		return (0);
+	// 	usleep(philo->p->tempo);
+	// }
+	sem_wait(philo->p->semafork);
+	// philo->p->forks -= 1;
 	printf("\033[%dm%ld %d has taken a fork\033[0m\n", philo->color,
 		ft_get_time() - philo->start_time, philo->index);
 	return (1);
@@ -73,9 +75,9 @@ int	ft_eat(t_philo *philo)
 			return (0);
 		usleep(philo->p->tempo);
 	}
-	philo->p->forks += 2;
-	sem_post(philo->p->semaphore);
-	sem_post(philo->p->semaphore);
+	// philo->p->forks += 2;
+	sem_post(philo->p->semafork);
+	sem_post(philo->p->semafork);
 	// pthread_mutex_unlock(&philo->fork);
 	// pthread_mutex_unlock(&philo->p->philos[(philo->index)
 	// 	% philo->p->nb_phi].fork);

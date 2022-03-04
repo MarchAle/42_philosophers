@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:50:29 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/02 14:09:07 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/04 17:39:19 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 
 # define TRUE 1
 # define FALSE 0
+# define SEM_NAME "/sem"
 
 typedef struct s_philo
 {
@@ -42,7 +43,7 @@ typedef struct s_philo
 
 typedef struct s_param
 {
-	sem_t		*semaphore;
+	sem_t		*semafork;
 	int			forks;
 	int			nb_phi;
 	long		t_die;
@@ -51,12 +52,13 @@ typedef struct s_param
 	int			nb_of_eat;
 	t_philo		*philos;
 	int			tempo;
+	int			*pids;
 }	t_param;
 
 long int	ft_atoi(const char *str);
 int			ft_check_args(char **av);
 int			ft_check_meal(t_philo *philo);
-void		*ft_philo(void *param);
+int			ft_philo(int pid, int i, t_param *param);
 long		ft_get_time(void);
 void		ft_putnbr_fd(int n, int fd);
 // void		ft_mutex_destroy(t_param *param);
