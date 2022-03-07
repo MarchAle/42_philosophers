@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 16:14:16 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/04 17:36:48 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/07 14:58:27 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,40 +14,12 @@
 
 int	ft_take_fork(t_philo *philo)
 {
-	// printf("nb forks = %d\n", philo->p->forks);
-	// printf("\033[%dmnb forks = %d\033[0m\n", philo->color, philo->p->forks);
-	// while (1)
-	// {
-	// 	if (philo->p->forks > 0)
-	// 		break ;
-	// 	if (ft_am_i_dead(philo))
-	// 		return (0);
-	// 	usleep(philo->p->tempo);
-	// }
-	sem_wait(philo->p->semafork);
-	// philo->p->forks -= 1;
+	sem_wait(philo->p->semaphore);
+	// printf("je suis %d\n", philo->index);
 	printf("\033[%dm%ld %d has taken a fork\033[0m\n", philo->color,
 		ft_get_time() - philo->start_time, philo->index);
 	return (1);
 }
-
-// int	ft_take_second_fork(t_philo *philo)
-// {
-// 	while (1)
-// 	{
-// 		if (philo->p->philos[(philo->index) % philo->p->nb_phi].fork_lock == 0)
-// 			break ;
-// 		if (ft_am_i_dead(philo))
-// 			return (0);
-// 		usleep(philo->p->tempo);
-// 	}
-// 	philo->p->philos[(philo->index) % philo->p->nb_phi].fork_lock = 1;
-// 	pthread_mutex_lock(&philo->p->philos[(philo->index)
-// 		% philo->p->nb_phi].fork);
-// 	printf("\033[%dm%ld %d has taken a fork\033[0m\n", philo->color,
-// 		ft_get_time() - philo->start_time, philo->index);
-// 	return (1);
-// }
 
 int	ft_think(t_philo *philo)
 {
@@ -65,9 +37,9 @@ int	ft_eat(t_philo *philo)
 	printf("\033[%dm%ld %d is eating\033[0m\n", philo->color,
 		ft_get_time() - philo->start_time, philo->index);
 	philo->nb_meal++;
-	if (philo->p->nb_of_eat)
-		if (ft_check_meal(philo))
-			return (0);
+	// if (philo->p->nb_of_eat)
+	// 	if (ft_check_meal(philo))
+	// 		return (0);
 	philo->last_meal = ft_get_time();
 	while (ft_get_time() < philo->p->t_eat + philo->last_meal)
 	{
@@ -75,28 +47,24 @@ int	ft_eat(t_philo *philo)
 			return (0);
 		usleep(philo->p->tempo);
 	}
-	// philo->p->forks += 2;
-	sem_post(philo->p->semafork);
-	sem_post(philo->p->semafork);
-	// pthread_mutex_unlock(&philo->fork);
-	// pthread_mutex_unlock(&philo->p->philos[(philo->index)
-	// 	% philo->p->nb_phi].fork);
-	// philo->fork_lock = 0;
-	// philo->p->philos[(philo->index) % philo->p->nb_phi].fork_lock = 0;
+	// usleep(200 * 1000);
+	sem_post(philo->p->semaphore);
+	sem_post(philo->p->semaphore);
 	return (1);
 }
 
 int	ft_sleep(t_philo *philo)
 {
-	printf("\033[%dm%ld %d is sleeping\033[0m\n", philo->color,
-		ft_get_time() - philo->start_time, philo->index);
-	while (ft_get_time() < philo->p->t_sleep
-		+ philo->last_meal + philo->p->t_eat)
+	int	i;
+
+	i = 0;
+	printf("\033[%dm%ld %d is sleeping\033[0m\n", philo->color,	ft_get_time() - philo->start_time, philo->index);
+	while (ft_get_time() < philo->p->t_sleep + philo->last_meal + philo->p->t_eat)
 	{
 		if (ft_am_i_dead(philo))
 			return (0);
 		usleep(philo->p->tempo);
 	}
-	usleep(100);
+	// usleep(200 * 1000);
 	return (1);
 }

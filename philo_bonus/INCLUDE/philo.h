@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:50:29 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/04 17:39:19 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/07 17:26:49 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,29 @@
 # include <semaphore.h>
 # include <fcntl.h>
 # include <sys/stat.h>
+# include <signal.h>
 # include "../INCLUDE/philo.h"
 
 # define TRUE 1
 # define FALSE 0
-# define SEM_NAME "/sem"
+# define SEM_FORK "/sem"
+# define SEM_DEAD "/sem_dead"
 
 typedef struct s_philo
 {
+	int				pid;
 	int				index;
 	long			start_time;
-	pthread_t		thread;
-	// pthread_mutex_t	fork;
-	// int				fork_lock;
 	long			last_meal;
 	int				nb_meal;
 	struct s_param	*p;
-	int				dead;
 	int				color;
 }	t_philo;
 
 typedef struct s_param
 {
-	sem_t		*semafork;
-	int			forks;
+	sem_t		*semaphore;
+	sem_t		*sem_dead;
 	int			nb_phi;
 	long		t_die;
 	long		t_eat;
@@ -52,13 +51,13 @@ typedef struct s_param
 	int			nb_of_eat;
 	t_philo		*philos;
 	int			tempo;
-	int			*pids;
+	// int			*pids;
 }	t_param;
 
 long int	ft_atoi(const char *str);
 int			ft_check_args(char **av);
 int			ft_check_meal(t_philo *philo);
-int			ft_philo(int pid, int i, t_param *param);
+int			ft_philo(int pid, int i, t_philo *philo);
 long		ft_get_time(void);
 void		ft_putnbr_fd(int n, int fd);
 // void		ft_mutex_destroy(t_param *param);

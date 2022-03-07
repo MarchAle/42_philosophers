@@ -6,20 +6,28 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:49:00 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/04 17:37:55 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/07 18:20:54 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../INCLUDE/philo.h"
 
+void	ft_init_sem(t_param *param)
+{
+	sem_t	*semaphore;
+	sem_t	*sem_dead;
+	
+	sem_unlink(SEM_FORK);
+	sem_unlink(SEM_DEAD);
+	semaphore = sem_open(SEM_FORK, O_CREAT | O_EXCL, 644, param->nb_phi);
+	sem_dead = sem_open(SEM_DEAD, O_CREAT | O_EXCL, 644, 0);
+	param->semaphore = semaphore;
+	param->sem_dead = sem_dead;
+}
+
 void	ft_get_param(t_param *param, char **av)
 {
 	param->nb_phi = ft_atoi(av[1]);
-	param->semafork = sem_open("/semafork", O_CREAT | O_EXCL, 0644, param->nb_phi);
-	sem_close(param->semafork);
-	// sem_open(&param->semafork, 0, param->nb_phi);
-	// sem_open()
-	param->forks = param->nb_phi;
 	if (param->nb_phi < 60)
 		param->tempo = 100;
 	else if (param->nb_phi < 120)
@@ -47,57 +55,34 @@ int	ft_init_table(t_param *param)
 	while (i < param->nb_phi)
 	{
 		philo.index = i + 1;
-		// philo.fork_lock = 0;
 		philo.p = param;
 		philo.last_meal = 0;
 		philo.nb_meal = 0;
-		philo.dead = 0;
 		philo.color = (i + 1) % 8 + 90;
 		param->philos[i] = philo;
-		// if (pthread_mutex_init(&param->philos[i].fork, NULL) != 0)
-		// 	return (0);
 		i++;
 	}
 	return (1);
 }
 
-// int	ft_launch_thread(t_param *param)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < param->nb_phi)
-// 	{
-// 		usleep(10);
-// 		if (pthread_create(&param->philos[i].thread, NULL,
-// 				ft_philo, &param->philos[i]) != 0)
-// 			return (0);
-// 		i++;
-// 	}
-// 	i = 0;
-// 	while (i < param->nb_phi)
-// 	{
-// 		if (pthread_join(param->philos[i].thread, NULL) != 0)
-// 			return (0);
-// 		i++;
-// 	}
-// 	sem_unlink(param->semaphore);
-// 	// ft_mutex_destroy(param);
-// 	free(param->philos);
-// 	return (1);
-// }
-
-void	ft_test(int pid, int i, t_param *param)
+void	ft_launch_process(t_param *param)
 {
-	printf("Hello je suis philo %d avec le pid %d\n", i, pid);
-	param->pids[i - 1] = pid;
-	// int j = 0;
-	// usleep(100000 * i);
-	// while (j < param->nb_phi)
-	// {
-	// 	printf("pids[%d] = %d\n", j, param->pids[j]);
-	// 	j++;
-	// }
+	int i;
+	int pid;
+
+	i = 0;
+	pid = 0;
+	while (i < param->nb_phi)
+	{
+		param->philos[i].pid = fork();
+		if (param->philos[i].pid == 0)
+		{
+			// param->philos[i - 1].pid = pid;
+			ft_philo(pid, i, &param->philos[i]);
+		}
+		i++;
+		usleep(100);
+	}
 }
 
 int	main(int ac, char **av)
@@ -123,31 +108,35 @@ int	main(int ac, char **av)
 	ft_get_param(&param, av);
 	if (!ft_init_table(&param))
 		return (0);
-	param.semafork = sem_open(SEM_NAME, O_RDWR, 0644, param.nb_phi);	
-	param.pids = malloc(sizeof(int) * param.nb_phi);
-	while (i < param.nb_phi && pid == 0)
-	{
-		usleep(100);
-		param.pids[i] = fork();
-		pid = param.pids[i];
-		i++;
-	}
-	// printf("ici pid = %d et nbr = %d\n", pid, i);
-	// pids[nbr] = pid;
-	if (pid != 0)
-	{
-		ft_philo(pid, i, &param);
-		// ft_test(pid, i, &param);
-	}
-
-	// if (pid == 0)
+	ft_init_sem(&param);
+	ft_launch_process(&param);
+	// param.pids = malloc(sizeof(int) * param.nb_phi);
+	// while (i < param.nb_phi && pid == 0)
 	// {
-	// 	int j = 0;
-	// 	while (j < param.nb_phi)
-	// 	{
-	// 		printf("pids[%d] = %d\n", j, param.pids[j]);
-	// 		j++;
-	// 	}
+	// 	pid = fork();
+	// 	i++;
+	// 	usleep(100);
+	// }
+	// if (pid != 0)
+	// {
+	// 	printf("pid : %d\n", pid);
+	// 	param.philos[i - 1].pid = pid;
+	// 	ft_philo(pid, i - 1, &param.philos[i - 1]);
+	// }
+	// else
+	// {
+		i = 0;
+		sem_wait(param.sem_dead);
+		// printf("START\n");
+		while (i < param.nb_phi)
+		{
+			// printf("pid %d is killed \n", param.philos[i].pid);
+			kill(param.philos[i].pid, SIGKILL);
+			i++;
+		}
+		// printf("STOP\n");
+		// printf("BOUUUUUUUUUUM !!!!!!!!!!!! \n");
+		sem_unlink(SEM_FORK);
 	// }
 	return (0);
 }
