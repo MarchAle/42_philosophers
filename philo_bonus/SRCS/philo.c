@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:28:35 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/07 16:04:24 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/08 17:09:02 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,26 +22,40 @@ int	ft_am_i_dead(t_philo *philo)
 	return (0);
 }
 
-int	ft_philo(int pid, int i, t_philo *philo)
+void	*ft_monitor(void *data)
 {
-	(void)pid;
-	(void)i;
-	// t_philo	*philo;
+	t_philo	*philo;
 
-	// philo = &param->philos[i];
-	// philo->pid = pid;
-	philo->start_time = ft_get_time();
-	philo->last_meal = ft_get_time();
+	philo = data;
 	while (1)
 	{
-		if (!ft_think(philo))
-			break ;
-		if (!ft_eat(philo))
-			break ;
-		if (!ft_sleep(philo))
-			break ;
+		if (ft_get_time() >= philo->last_meal + philo->p->t_die)
+		{
+			printf("%ld %d died\n", ft_get_time() - philo->start_time, philo->index);
+			sem_post(philo->p->sem_dead);
+		}
+		usleep(100);
 	}
-	sem_post(philo->p->sem_dead);
-	// sem_close(semaphore);
+}
+
+int	ft_philo(t_philo *philo)
+{
+	philo->start_time = ft_get_time();
+	philo->last_meal = ft_get_time();
+	if (pthread_create(&philo->monitor, NULL, ft_monitor, philo) != 0)
+		return (0);
+	while (1)
+	{
+		ft_think(philo);
+		ft_eat(philo);
+		ft_sleep(philo);
+		// if (!ft_think(philo))
+		// 	break ;
+		// if (!ft_eat(philo))
+		// 	break ;
+		// if (!ft_sleep(philo))
+		// 	break ;
+	}
+	// sem_post(philo->p->sem_dead);
 	return (0);
 }

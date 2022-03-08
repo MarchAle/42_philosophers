@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:50:29 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/07 17:26:49 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/08 17:23:41 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,11 @@
 # define FALSE 0
 # define SEM_FORK "/sem"
 # define SEM_DEAD "/sem_dead"
+# define SEM_MEAL "/sem_meal"
 
 typedef struct s_philo
 {
+	pthread_t		monitor;
 	int				pid;
 	int				index;
 	long			start_time;
@@ -38,12 +40,15 @@ typedef struct s_philo
 	int				nb_meal;
 	struct s_param	*p;
 	int				color;
+	long			t_die;
 }	t_philo;
 
 typedef struct s_param
 {
+	pthread_t	meal_monitor;
 	sem_t		*semaphore;
 	sem_t		*sem_dead;
+	sem_t		*sem_meal;
 	int			nb_phi;
 	long		t_die;
 	long		t_eat;
@@ -51,21 +56,19 @@ typedef struct s_param
 	int			nb_of_eat;
 	t_philo		*philos;
 	int			tempo;
-	// int			*pids;
 }	t_param;
 
 long int	ft_atoi(const char *str);
 int			ft_check_args(char **av);
-int			ft_check_meal(t_philo *philo);
-int			ft_philo(int pid, int i, t_philo *philo);
+void		ft_check_meal(t_philo *philo);
+int			ft_philo(t_philo *philo);
 long		ft_get_time(void);
 void		ft_putnbr_fd(int n, int fd);
-// void		ft_mutex_destroy(t_param *param);
 int			ft_am_i_dead(t_philo *philo);
 int			ft_take_fork(t_philo *philo);
-// int			ft_take_second_fork(t_philo *philo);
 int			ft_think(t_philo *philo);
 int			ft_eat(t_philo *philo);
 int			ft_sleep(t_philo *philo);
+void		ft_usleep(int ms);
 
 #endif

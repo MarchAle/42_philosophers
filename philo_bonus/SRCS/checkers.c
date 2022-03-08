@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 10:18:13 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/01 17:08:28 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/08 17:49:28 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,16 +66,25 @@ int	ft_check_args(char **av)
 	return (1);
 }
 
-int	ft_check_meal(t_philo *philo)
-{
-	int	i;
+// int	ft_check_meal(t_philo *philo)
+// {
+// 	int	i;
 
-	i = 0;
-	while (i < philo->p->nb_phi)
+// 	i = 0;
+// 	while (i < philo->p->nb_phi)
+// 	{
+// 		if (philo->p->philos[i].nb_meal < philo->p->nb_of_eat)
+// 			return (0);
+// 		i++;
+// 	}
+// 	return (1);
+// }
+
+void	ft_check_meal(t_philo *philo)
+{
+	if (philo->nb_meal == philo->p->nb_of_eat)
 	{
-		if (philo->p->philos[i].nb_meal < philo->p->nb_of_eat)
-			return (0);
-		i++;
+		printf("%d a bien mangé\n", philo->index);
+		sem_post(philo->p->sem_meal);
 	}
-	return (1);
 }
