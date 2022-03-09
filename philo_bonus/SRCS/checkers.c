@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 10:18:13 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/08 17:49:28 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/09 14:11:43 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,11 @@ int	ft_check_args(char **av)
 	i = 0;
 	while (av[i])
 	{
+		if (ft_atoi(av[i]) > INT_MAX || ft_atoi(av[i]) < INT_MIN)
+		{
+			write (2, "Error : Int limit\n", 18);
+			return (0);
+		}
 		if (ft_check_empty(av[i]) == TRUE)
 		{
 			write (2, "Error : Empty argument\n", 23);
@@ -59,32 +64,15 @@ int	ft_check_args(char **av)
 			write (2, "Error : Wrong argument format\n", 30);
 			return (0);
 		}
-		if (i == 4 && ft_atoi(av[i]) == 0)
+		if ((i == 4 || i == 1) && ft_atoi(av[i]) == 0)
 			return (0);
 		i++;
 	}
 	return (1);
 }
 
-// int	ft_check_meal(t_philo *philo)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < philo->p->nb_phi)
-// 	{
-// 		if (philo->p->philos[i].nb_meal < philo->p->nb_of_eat)
-// 			return (0);
-// 		i++;
-// 	}
-// 	return (1);
-// }
-
 void	ft_check_meal(t_philo *philo)
 {
 	if (philo->nb_meal == philo->p->nb_of_eat)
-	{
-		printf("%d a bien mangé\n", philo->index);
 		sem_post(philo->p->sem_meal);
-	}
 }
