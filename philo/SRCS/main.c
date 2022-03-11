@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:49:00 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/11 11:49:41 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/11 17:37:16 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int	ft_get_param(t_param *param, char **av)
 		param->nb_of_eat = ft_atoi(av[5]);
 	else
 		param->nb_of_eat = 0;
+	if (pthread_mutex_init(&param->msg_m, NULL))
+		return (0);
 	return (1);
 }
 
