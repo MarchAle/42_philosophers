@@ -6,40 +6,11 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:02:28 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/10 17:09:53 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/11 10:57:56 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../INCLUDE/philo.h"
-
-// int	ft_strlen(char *str)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (str[i])
-// 		i++;
-// 	return (i);
-// }
-
-// void	ft_putnbr_fd(int n, int fd)
-// {
-// 	long int	nbr;
-// 	int			d;
-
-// 	nbr = n;
-// 	if (nbr < 0)
-// 	{
-// 		write(fd, "-", 1);
-// 		nbr *= -1;
-// 	}
-// 	if (nbr >= 10)
-// 	{
-// 		ft_putnbr_fd(nbr / 10, fd);
-// 	}
-// 	d = nbr % 10 + '0';
-// 	write(fd, &d, 1);
-// }
 
 long int	ft_atoi(const char *str)
 {

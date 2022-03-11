@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:28:35 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/09 14:18:41 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/11 14:46:17 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	*ft_monitor(void *data)
 	{
 		if (ft_get_time() >= philo->last_meal + philo->p->t_die)
 		{
-			sem_wait(philo->sem_dead);
+			sem_wait(philo->p->sem_msg);
 			usleep(100);
-			printf("%ld %d died\n", ft_get_time() - philo->start_time,
+			printf("%ld %d died\n", ft_get_time() - philo->p->start_time,
 				philo->index);
 			sem_post(philo->p->sem_end);
 		}
@@ -33,16 +33,9 @@ void	*ft_monitor(void *data)
 
 int	ft_philo(t_philo *philo)
 {
-	sem_t	*sem_dead;
-
-	sem_unlink(SEM_DEAD);
-	sem_dead = sem_open(SEM_DEAD, O_CREAT | O_EXCL, 644, 1);
-	if (sem_dead < 0)
-		exit(EXIT_FAILURE);
-	philo->sem_dead = sem_dead;
-	philo->start_time = ft_get_time();
 	philo->last_meal = ft_get_time();
-	if (pthread_create(&philo->monitor, NULL, ft_monitor, philo) != 0)
+	philo->p->start_time = ft_get_time();
+	if (pthread_create(&philo->death_monitor, NULL, ft_monitor, philo) != 0)
 		exit(EXIT_FAILURE);
 	while (1)
 	{

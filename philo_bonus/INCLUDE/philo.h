@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:50:29 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/09 14:44:02 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/11 14:46:46 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,13 @@
 # define SEM_FORK "/sem"
 # define SEM_END "/sem_end"
 # define SEM_MEAL "/sem_meal"
-# define SEM_DEAD "/sem_dead"
+# define SEM_MSG "/sem_msg"
 
 typedef struct s_philo
 {
-	pthread_t		monitor;
-	sem_t			*sem_dead;
+	pthread_t		death_monitor;
 	int				pid;
 	int				index;
-	long			start_time;
 	long			last_meal;
 	int				nb_meal;
 	struct s_param	*p;
@@ -51,10 +49,12 @@ typedef struct s_param
 	sem_t		*semafork;
 	sem_t		*sem_end;
 	sem_t		*sem_meal;
+	sem_t		*sem_msg;
 	int			nb_phi;
 	long		t_die;
 	long		t_eat;
 	long		t_sleep;
+	long		start_time;
 	int			nb_of_eat;
 	t_philo		*philos;
 	int			tempo;
@@ -71,6 +71,6 @@ void		ft_eat(t_philo *philo);
 void		ft_sleep(t_philo *philo);
 void		ft_init_sem(t_param *param);
 void		ft_get_param(t_param *param, char **av);
-int			ft_init_table(t_param *param);
+void		ft_init_table(t_param *param);
 
 #endif

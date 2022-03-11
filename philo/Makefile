@@ -6,17 +6,18 @@
 #    By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/21 15:41:05 by amarchal          #+#    #+#              #
-#    Updated: 2022/03/02 15:31:59 by amarchal         ###   ########.fr        #
+#    Updated: 2022/03/11 11:37:05 by amarchal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME := philo
 
 DIR_SRCS := ./SRCS
-LST_SRCS := main.c		\
-			philo.c		\
-			utils.c		\
-			actions.c	\
+LST_SRCS := main.c			\
+			monitoring.c	\
+			philo.c			\
+			utils.c			\
+			actions.c		\
 			checkers.c
 
 DIR_OBJS := ./.OBJS

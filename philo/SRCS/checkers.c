@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 10:18:13 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/10 17:14:08 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/11 11:51:16 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,27 +64,8 @@ int	ft_check_args(char **av)
 			write (2, "Error : Wrong argument format\n", 30);
 			return (0);
 		}
-		if ((i == 4 || i == 1) && ft_atoi(av[i]) == 0)
+		if ((i == 4 || i == 0) && ft_atoi(av[i]) == 0)
 			return (0);
-		i++;
-	}
-	return (1);
-}
-
-int	ft_dinner_end(t_param *param)
-{
-	int	i;
-
-	i = 0;
-	while (i < param->nb_phi)
-	{
-		pthread_mutex_lock(&param->philos[i].meal);
-		if (param->philos[i].nb_meal < param->nb_of_eat)
-		{
-			pthread_mutex_unlock(&param->philos[i].meal);
-			return (0);
-		}
-		pthread_mutex_unlock(&param->philos[i].meal);
 		i++;
 	}
 	return (1);
