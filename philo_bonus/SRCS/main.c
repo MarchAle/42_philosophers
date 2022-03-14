@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:49:00 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/11 14:36:02 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/14 10:49:40 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	ft_launch_process(t_param *param)
 		param->philos[i].pid = fork();
 		if (param->philos[i].pid == 0)
 			ft_philo(&param->philos[i]);
+		if (param->philos[i].pid == -1)
+			exit(EXIT_FAILURE);
 	}
 }
 
@@ -73,7 +75,7 @@ int	main(int ac, char **av)
 	if (pthread_create(&param.meal_monitor, NULL, ft_meal_monitor, &param) != 0)
 	{
 		free(param.philos);
-		return (0);
+		exit(EXIT_FAILURE);
 	}
 	ft_launch_process(&param);
 	sem_wait(param.sem_end);

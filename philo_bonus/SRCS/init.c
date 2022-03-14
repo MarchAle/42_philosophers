@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 14:26:19 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/11 14:54:50 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/14 11:09:50 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ft_init_sem(t_param *param)
 void	ft_get_param(t_param *param, char **av)
 {
 	param->nb_phi = ft_atoi(av[1]);
-	if (param->nb_phi < 60)
+	if (param->nb_phi < 50)
 		param->tempo = 100;
 	else if (param->nb_phi < 120)
 		param->tempo = 500;

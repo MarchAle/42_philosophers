@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:28:35 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/11 14:46:17 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/14 11:18:52 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	*ft_monitor(void *data)
 int	ft_philo(t_philo *philo)
 {
 	philo->last_meal = ft_get_time();
-	philo->p->start_time = ft_get_time();
 	if (pthread_create(&philo->death_monitor, NULL, ft_monitor, philo) != 0)
 		exit(EXIT_FAILURE);
 	while (1)

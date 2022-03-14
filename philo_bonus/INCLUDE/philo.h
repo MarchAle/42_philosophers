@@ -6,7 +6,7 @@
 /*   By: amarchal <amarchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:50:29 by amarchal          #+#    #+#             */
-/*   Updated: 2022/03/11 14:46:46 by amarchal         ###   ########.fr       */
+/*   Updated: 2022/03/14 10:44:51 by amarchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 typedef struct s_philo
 {
 	pthread_t		death_monitor;
-	int				pid;
+	pid_t			pid;
 	int				index;
 	long			last_meal;
 	int				nb_meal;
